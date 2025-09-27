@@ -17,6 +17,17 @@ import (
 	"gorm.io/gorm"
 )
 
+func createUserAndToken(t *testing.T, db *gorm.DB, username string) (*models.User, string) {
+	user := &models.User{Username: username, Email: username + "@test.com"}
+	err := db.Create(user).Error
+	assert.NoError(t, err)
+
+	token, err := auth.GenerateToken(user.Username)
+	assert.NoError(t, err)
+
+	return user, token
+}
+
 func setupTestDBAndRouter(t *testing.T) *gin.Engine {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 	assert.NoError(t, err)
@@ -99,4 +110,84 @@ func TestGetUsers_Unauthorized(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusUnauthorized, w.Code)
+}
+
+func TestGetUserByID(t *testing.T) {
+
+	router := setupTestDBAndRouter(t)
+	createdUser, token := createUserAndToken(t, database.DB, "getbyid_user")
+
+	authorized := router.Group("/api/v1")
+	authorized.Use(AuthMiddleware())
+	{
+		authorized.GET("/users/:id", GetUserByID)
+	}
+
+	url := fmt.Sprintf("/api/v1/users/%d", createdUser.ID)
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	var foundUser models.User
+	err := json.Unmarshal(w.Body.Bytes(), &foundUser)
+	assert.NoError(t, err)
+	assert.Equal(t, createdUser.Username, foundUser.Username)
+	assert.Equal(t, createdUser.ID, foundUser.ID)
+}
+
+func TestUpdateUser(t *testing.T) {
+
+	router := setupTestDBAndRouter(t)
+	userToUpdate, token := createUserAndToken(t, database.DB, "update_user")
+
+	authorized := router.Group("/api/v1")
+	authorized.Use(AuthMiddleware())
+	{
+		authorized.PUT("/users/:id", UpdateUser)
+	}
+
+	updatePayload := `{"username": "updated_user", "email": "update@test.com", "bio": "Bio atualizada"}`
+	url := fmt.Sprintf("/api/v1/users/%d", userToUpdate.ID)
+	req, _ := http.NewRequest("PUT", url, bytes.NewBufferString(updatePayload))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	var updatedUser models.User
+	err := json.Unmarshal(w.Body.Bytes(), &updatedUser)
+	assert.NoError(t, err)
+	assert.Equal(t, "updated_user", updatedUser.Username)
+	assert.Equal(t, "Bio atualizada", updatedUser.Bio)
+}
+
+func TestDeleteUser(t *testing.T) {
+
+	router := setupTestDBAndRouter(t)
+	userToDelete, token := createUserAndToken(t, database.DB, "delete_user")
+
+	authorized := router.Group("/api/v1")
+	authorized.Use(AuthMiddleware())
+	{
+		authorized.DELETE("/users/:id", DeleteUser)
+	}
+
+	url := fmt.Sprintf("/api/v1/users/%d", userToDelete.ID)
+	req, _ := http.NewRequest("DELETE", url, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	var deletedUser models.User
+	err := database.DB.Unscoped().First(&deletedUser, userToDelete.ID).Error
+	assert.NoError(t, err)
+	assert.NotNil(t, deletedUser.DeletedAt)
 }
