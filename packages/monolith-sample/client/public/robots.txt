@@ -1,3 +1,0 @@
-# By default, allow all crawlers to access all content.
-User-agent: *
-Disallow:
