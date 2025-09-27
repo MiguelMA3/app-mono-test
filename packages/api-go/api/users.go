@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/leandro-andrade-candido/api-go/auth"
 	"github.com/leandro-andrade-candido/api-go/database"
 	"github.com/leandro-andrade-candido/api-go/database/models"
 )
@@ -75,4 +76,30 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Usuario deletado com sucesso"})
+}
+
+type LoginRequest struct {
+	Username string `json:"username" biding:"required"`
+	Password string `json:"password" biding:"required"`
+}
+
+func Login(c *gin.Context) {
+	var req LoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "usuario e senha sao obrigatorios"})
+		return
+	}
+
+	if req.Username != "admin" || req.Password != "1234" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "usuario ou senha incorretos"})
+		return
+	}
+
+	token, err := auth.GenerateToken(req.Username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "erro ao gerar token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }
