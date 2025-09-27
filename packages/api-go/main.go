@@ -7,9 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/leandro-andrade-candido/api-go/api"
+	"github.com/leandro-andrade-candido/api-go/database"
 )
 
 func main() {
+	database.ConnectDatabase()
+
 	router := gin.Default()
 
 	router.GET("/", func(c *gin.Context) {
