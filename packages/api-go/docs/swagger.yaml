@@ -1,0 +1,380 @@
+basePath: /api/v1
+definitions:
+  api.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Post:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        description: <-- MUDANÇA AQUI
+        type: string
+      id:
+        type: integer
+      likes:
+        type: integer
+      updatedAt:
+        type: string
+      userId:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      bio:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        description: <-- MUDANÇA AQUI
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: miguelm_avelar@hotmail.com
+    name: MiguelMA3
+    url: https://github.com/MiguelMA3/
+  description: API de Gerenciamento de Usuario e Timeline do desafio tecnico
+  title: API App-Mono-Test
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Verifica as credenciais e retorna um token JWT se forem válidas.
+      parameters:
+      - description: Credenciais de Login
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/api.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            properties:
+              token:
+                type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Autentica um usuário
+      tags:
+      - Auth
+  /posts:
+    get:
+      consumes:
+      - application/json
+      description: Retorna um array com todas as postagens na timeline, ordenadas
+        da mais recente para a mais antiga.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Post'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Lista todas as postagens
+      tags:
+      - Posts
+    post:
+      consumes:
+      - application/json
+      description: Adiciona uma nova postagem à timeline. O ID do usuário é extraído
+        do token.
+      parameters:
+      - description: Conteúdo da Postagem
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.Post'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Post'
+        "400":
+          description: Bad Request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Cria uma nova postagem
+      tags:
+      - Posts
+  /posts/{id}/like:
+    post:
+      consumes:
+      - application/json
+      description: Incrementa o contador de curtidas de uma postagem específica.
+      parameters:
+      - description: ID da Postagem
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Post'
+        "404":
+          description: Not Found
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Curte uma postagem
+      tags:
+      - Posts
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retorna um array com todos os usuários cadastrados no banco de
+        dados.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Lista todos os usuários
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Adiciona um novo usuário ao banco de dados com base no corpo da
+        requisição.
+      parameters:
+      - description: Dados do Usuário para Criar
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Cria um novo usuário
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove um usuário do banco de dados (soft delete).
+      parameters:
+      - description: ID do Usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Deleta um usuário
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: Retorna os detalhes de um usuário específico.
+      parameters:
+      - description: ID do Usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Busca um usuário pelo ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Atualiza os dados de um usuário existente com base no ID e no corpo
+        da requisição.
+      parameters:
+      - description: ID do Usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados do Usuário para Atualizar
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Atualiza um usuário
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    description: Digite "Bearer " seguido do seu token JWT.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

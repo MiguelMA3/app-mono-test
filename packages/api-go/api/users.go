@@ -9,6 +9,18 @@ import (
 	"github.com/leandro-andrade-candido/api-go/database/models"
 )
 
+// CreateUser godoc
+// @Summary      Cria um novo usuário
+// @Description  Adiciona um novo usuário ao banco de dados com base no corpo da requisição.
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        user  body      models.User  true  "Dados do Usuário para Criar"
+// @Success      201   {object}  models.User
+// @Failure      400   {object}  object{error=string}
+// @Failure      500   {object}  object{error=string}
+// @Router       /users [post]
+// @Security     BearerAuth
 func CreateUser(c *gin.Context) {
 	var newUser models.User
 
@@ -25,6 +37,16 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, newUser)
 }
 
+// GetUsers godoc
+// @Summary      Lista todos os usuários
+// @Description  Retorna um array com todos os usuários cadastrados no banco de dados.
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Success      200  {array}   models.User
+// @Failure      500  {object}  object{error=string}
+// @Router       /users [get]
+// @Security     BearerAuth
 func GetUsers(c *gin.Context) {
 
 	users, err := models.GetAllUsers(database.DB)
@@ -35,6 +57,17 @@ func GetUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
+// GetUserByID godoc
+// @Summary      Busca um usuário pelo ID
+// @Description  Retorna os detalhes de um usuário específico.
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        id    path      int  true  "ID do Usuário"
+// @Success      200   {object}  models.User
+// @Failure      404   {object}  object{message=string}
+// @Router       /users/{id} [get]
+// @Security     BearerAuth
 func GetUserByID(c *gin.Context) {
 	id := c.Param("id")
 
@@ -46,6 +79,20 @@ func GetUserByID(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// UpdateUser godoc
+// @Summary      Atualiza um usuário
+// @Description  Atualiza os dados de um usuário existente com base no ID e no corpo da requisição.
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        id    path      int          true  "ID do Usuário"
+// @Param        user  body      models.User  true  "Dados do Usuário para Atualizar"
+// @Success      200   {object}  models.User
+// @Failure      400   {object}  object{error=string}
+// @Failure      404   {object}  object{message=string}
+// @Failure      500   {object}  object{error=string}
+// @Router       /users/{id} [put]
+// @Security     BearerAuth
 func UpdateUser(c *gin.Context) {
 	id := c.Param("id")
 
@@ -68,6 +115,17 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// DeleteUser godoc
+// @Summary      Deleta um usuário
+// @Description  Remove um usuário do banco de dados (soft delete).
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        id    path      int  true  "ID do Usuário"
+// @Success      200   {object}  object{message=string}
+// @Failure      404   {object}  object{message=string}
+// @Router       /users/{id} [delete]
+// @Security     BearerAuth
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 
@@ -83,6 +141,18 @@ type LoginRequest struct {
 	Password string `json:"password" biding:"required"`
 }
 
+// Login godoc
+// @Summary      Autentica um usuário
+// @Description  Verifica as credenciais e retorna um token JWT se forem válidas.
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        credentials body      LoginRequest  true  "Credenciais de Login"
+// @Success      200         {object}  object{token=string}
+// @Failure      400         {object}  object{error=string}
+// @Failure      401         {object}  object{error=string}
+// @Failure      500         {object}  object{error=string}
+// @Router       /login [post]
 func Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

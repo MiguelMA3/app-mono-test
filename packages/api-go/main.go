@@ -1,3 +1,4 @@
+// packages/api-go/main.go
 package main
 
 import (
@@ -8,12 +9,34 @@ import (
 
 	"github.com/leandro-andrade-candido/api-go/api"
 	"github.com/leandro-andrade-candido/api-go/database"
+
+	_ "github.com/leandro-andrade-candido/api-go/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+// @title API App-Mono-Test
+// @version 1.0
+// @description API de Gerenciamento de Usuario e Timeline do desafio tecnico
+
+// @contact.name MiguelMA3
+// @contact.url https://github.com/MiguelMA3/
+// @contact.email miguelm_avelar@hotmail.com
+
+// @host localhost:8080
+// @BasePath /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Digite "Bearer " seguido do seu token JWT.
 
 func main() {
 	database.ConnectDatabase()
 
 	router := gin.Default()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Hello There!")

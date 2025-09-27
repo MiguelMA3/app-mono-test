@@ -1,14 +1,19 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
 type User struct {
-	gorm.Model
-	Username string `gorm:"uniqueIndex;not null"`
-	Email    string `gorm:"uniqueIndex;not null"`
-	Bio      string
+	ID        uint       `gorm:"primarykey" json:"id"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `gorm:"index" json:"deletedAt,omitempty"` // <-- MUDANÇA AQUI
+	Username  string     `gorm:"uniqueIndex;not null" json:"username"`
+	Email     string     `gorm:"uniqueIndex;not null" json:"email"`
+	Bio       string     `json:"bio"`
 }
 
 func GetAllUsers(db *gorm.DB) ([]User, error) {

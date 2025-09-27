@@ -1,14 +1,19 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
 type Post struct {
-	gorm.Model
-	UserID  uint
-	Content string `gorm:"not null"`
-	Likes   int    `gorm:"default:0"`
+	ID        uint       `gorm:"primarykey" json:"id"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `gorm:"index" json:"deletedAt,omitempty"` // <-- MUDANÇA AQUI
+	UserID    uint       `json:"userId"`
+	Content   string     `gorm:"not null" json:"content"`
+	Likes     int        `gorm:"default:0" json:"likes"`
 }
 
 func GetAllPosts(db *gorm.DB) ([]Post, error) {
