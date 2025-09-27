@@ -1,4 +1,4 @@
-package api
+package tests
 
 import (
 	"bytes"
@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/leandro-andrade-candido/api-go/api"
 	"github.com/leandro-andrade-candido/api-go/auth"
 	"github.com/leandro-andrade-candido/api-go/database"
 	"github.com/leandro-andrade-candido/api-go/database/models"
@@ -39,9 +40,9 @@ func TestCreatePost(t *testing.T) {
 	router, testUser := setupTestDBAndRouterForPosts(t)
 
 	authorized := router.Group("/api/v1")
-	authorized.Use(AuthMiddleware())
+	authorized.Use(api.AuthMiddleware())
 	{
-		authorized.POST("/posts", CreatePost)
+		authorized.POST("/posts", api.CreatePost)
 	}
 
 	token, err := auth.GenerateToken(testUser.Username)
@@ -70,9 +71,9 @@ func TestLikePost(t *testing.T) {
 	database.DB.Create(&initialPost)
 
 	authorized := router.Group("/api/v1")
-	authorized.Use(AuthMiddleware())
+	authorized.Use(api.AuthMiddleware())
 	{
-		authorized.POST("/posts/:id/like", LikePost)
+		authorized.POST("/posts/:id/like", api.LikePost)
 	}
 
 	token, err := auth.GenerateToken(testUser.Username)

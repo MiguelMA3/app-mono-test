@@ -1,4 +1,4 @@
-package api
+package tests
 
 import (
 	"bytes"
@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/leandro-andrade-candido/api-go/api"
 	"github.com/leandro-andrade-candido/api-go/auth"
 	"github.com/leandro-andrade-candido/api-go/database"
 	"github.com/leandro-andrade-candido/api-go/database/models"
@@ -46,7 +47,7 @@ func setupTestDBAndRouter(t *testing.T) *gin.Engine {
 
 func TestCreateUser(t *testing.T) {
 	router := setupTestDBAndRouter(t)
-	router.POST("/api/v1/users", CreateUser)
+	router.POST("/api/v1/users", api.CreateUser)
 
 	newUser := `{"username": "testuser", "email": "test@example.com", "bio": "A test user"}`
 	req, _ := http.NewRequest("POST", "/api/v1/users", bytes.NewBufferString(newUser))
@@ -71,9 +72,9 @@ func TestGetUsers_Authorized(t *testing.T) {
 	database.DB.Create(&testUser)
 
 	authorized := router.Group("/api/v1")
-	authorized.Use(AuthMiddleware())
+	authorized.Use(api.AuthMiddleware())
 	{
-		authorized.GET("/users", GetUsers)
+		authorized.GET("/users", api.GetUsers)
 	}
 
 	token, err := auth.GenerateToken(testUser.Username)
@@ -99,9 +100,9 @@ func TestGetUsers_Unauthorized(t *testing.T) {
 	router := setupTestDBAndRouter(t)
 
 	authorized := router.Group("/api/v1")
-	authorized.Use(AuthMiddleware())
+	authorized.Use(api.AuthMiddleware())
 	{
-		authorized.GET("/users", GetUsers)
+		authorized.GET("/users", api.GetUsers)
 	}
 
 	req, _ := http.NewRequest("GET", "/api/v1/users", nil)
@@ -118,9 +119,9 @@ func TestGetUserByID(t *testing.T) {
 	createdUser, token := createUserAndToken(t, database.DB, "getbyid_user")
 
 	authorized := router.Group("/api/v1")
-	authorized.Use(AuthMiddleware())
+	authorized.Use(api.AuthMiddleware())
 	{
-		authorized.GET("/users/:id", GetUserByID)
+		authorized.GET("/users/:id", api.GetUserByID)
 	}
 
 	url := fmt.Sprintf("/api/v1/users/%d", createdUser.ID)
@@ -144,9 +145,9 @@ func TestUpdateUser(t *testing.T) {
 	userToUpdate, token := createUserAndToken(t, database.DB, "update_user")
 
 	authorized := router.Group("/api/v1")
-	authorized.Use(AuthMiddleware())
+	authorized.Use(api.AuthMiddleware())
 	{
-		authorized.PUT("/users/:id", UpdateUser)
+		authorized.PUT("/users/:id", api.UpdateUser)
 	}
 
 	updatePayload := `{"username": "updated_user", "email": "update@test.com", "bio": "Bio atualizada"}`
@@ -172,9 +173,9 @@ func TestDeleteUser(t *testing.T) {
 	userToDelete, token := createUserAndToken(t, database.DB, "delete_user")
 
 	authorized := router.Group("/api/v1")
-	authorized.Use(AuthMiddleware())
+	authorized.Use(api.AuthMiddleware())
 	{
-		authorized.DELETE("/users/:id", DeleteUser)
+		authorized.DELETE("/users/:id", api.DeleteUser)
 	}
 
 	url := fmt.Sprintf("/api/v1/users/%d", userToDelete.ID)
