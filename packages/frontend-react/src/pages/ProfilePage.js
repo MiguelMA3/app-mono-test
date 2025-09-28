@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import api from '../services/api';
+import Post from '../components/Post/Post';
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -46,11 +47,11 @@ function ProfilePage() {
   };
 
   if (loading) {
-    return <div>Carregando perfil...</div>;
+    return <div className="page-content">Carregando perfil...</div>;
   }
 
   if (error) {
-    return <div style={{ color: 'red' }}>{error}</div>;
+    return <div className="page-content" style={{ color: 'red' }}>{error}</div>;
   }
 
   return (
@@ -58,33 +59,18 @@ function ProfilePage() {
       {user && (
         <>
           <h1>Perfil de {user.username}</h1>
-          <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Bio:</strong> {user.bio}</p>
           <p><strong>Membro desde:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
         </>
       )}
 
-      <hr />
+      <hr style={{margin: '20px 0'}}/>
       <h2>Posts de {user?.username}</h2>
       
       <div>
         {posts.length > 0 ? (
           posts.map(post => (
-            <div key={post.id} style={{ border: '1px solid #ccc', margin: '10px', padding: '10px' }}>
-              <p><strong>
-                <Link to={`/profile/${post.user.id}`}>
-                  {post.user.username}
-                </Link>
-              </strong></p>
-              
-              <p>{post.content}</p>
-              <small>Postado em: {new Date(post.createdAt).toLocaleString()}</small>
-              <div>
-                <button onClick={() => handleLikePost(post.id)}>
-                  Curtir ({post.likes})
-                </button>
-              </div>
-            </div>
+            <Post key={post.id} post={post} onLike={handleLikePost} />
           ))
         ) : (
           <p>Este usuário ainda não fez nenhuma postagem.</p>

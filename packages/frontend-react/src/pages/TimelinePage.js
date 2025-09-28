@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../services/api';
+import Post from '../components/Post/Post';
 
 function TimelinePage() {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [newPostContent, setNewPostContent] = useState('');
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true);
       try {
         const response = await api.get('/posts');
         setPosts(response.data || []);
+      } catch (error) {
+        console.error("Falha ao buscar posts", error);
       } finally {
         setLoading(false);
       }
@@ -25,7 +28,7 @@ function TimelinePage() {
 
     try {
       const response = await api.post('/posts', {
-        content:newPostContent,
+        content: newPostContent,
       });
       setPosts([response.data, ...posts]);
       setNewPostContent('');
@@ -37,7 +40,6 @@ function TimelinePage() {
   const handleLikePost = async (postId) => {
     try {
       const response = await api.post(`/posts/${postId}/like`);
-      
       const updatedPosts = posts.map(post =>
         post.id === postId ? response.data : post
       );
@@ -48,12 +50,11 @@ function TimelinePage() {
   };
 
   if (loading) {
-    return <div>Carregando posts...</div>;
+    return <div className="page-content">Carregando posts...</div>;
   }
 
   return (
     <div className="page-content">
-      <hr />
       <h1>Timeline</h1>
 
       <form onSubmit={handleCreatePost}>
@@ -62,32 +63,15 @@ function TimelinePage() {
           onChange={(e) => setNewPostContent(e.target.value)}
           placeholder="O que está acontecendo?"
           rows="3"
-          style={{ width: '100%', boxSizing: 'border-box' }}
         />
         <button type="submit">Postar</button>
       </form>
-      <hr />
+      <hr style={{margin: '20px 0'}}/>
 
       <div>
         {posts.length > 0 ? (
           posts.map(post => (
-            <div key={post.id} style={{ border: '1px solid #ccc', margin: '10px', padding: '10px' }}>
-              <p><strong>
-                {post.user ? (
-                  <Link to={`/profile/${post.user.id}`}>
-                    {post.user.username}
-                  </Link>
-                ) : 'Usuário desconhecido'}
-              </strong></p>
-
-              <p>{post.content}</p>
-              <small>Postado em: {new Date(post.createdAt).toLocaleString()}</small>
-              <div>
-                <button onClick={() => handleLikePost(post.id)}>
-                  Curtir ({post.likes})
-                </button>
-              </div>
-            </div>
+            <Post key={post.id} post={post} onLike={handleLikePost} />
           ))
         ) : (
           <p>Nenhum post encontrado. Crie o primeiro!</p>
