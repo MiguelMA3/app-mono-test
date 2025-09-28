@@ -90,5 +90,5 @@ func TestLikePost(t *testing.T) {
 	var likedPost models.Post
 	err = json.Unmarshal(w.Body.Bytes(), &likedPost)
 	assert.NoError(t, err)
-	assert.Equal(t, initialPost.Likes+1, likedPost.Likes) // Verifica se a curtida foi incrementada
+	assert.Equal(t, initialPost.Likes+1, likedPost.Likes)
 }

@@ -10,7 +10,7 @@ type Post struct {
 	ID        uint       `gorm:"primarykey" json:"id"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
-	DeletedAt *time.Time `gorm:"index" json:"deletedAt,omitempty"` // <-- MUDANÇA AQUI
+	DeletedAt *time.Time `gorm:"index" json:"deletedAt,omitempty"`
 	UserID    uint       `json:"userId"`
 	Content   string     `gorm:"not null" json:"content"`
 	Likes     int        `gorm:"default:0" json:"likes"`

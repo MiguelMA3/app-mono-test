@@ -27,22 +27,18 @@ func CreatePost(c *gin.Context) {
 		return
 	}
 
-	// --- LÓGICA CORRIGIDA E SEGURA ---
-	// 1. Obtém o username do contexto, que foi adicionado pelo middleware de autenticação.
 	username, exists := c.Get("username")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
 		return
 	}
 
-	// 2. Busca o usuário no banco de dados para obter seu ID.
 	var user models.User
 	if err := database.DB.Where("username = ?", username).First(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Falha ao encontrar usuário autenticado"})
 		return
 	}
 
-	// 3. Associa o ID do usuário autenticado ao novo post, garantindo que ninguém poste em nome de outrem.
 	newPost.UserID = user.ID
 
 	if err := models.CreatePost(database.DB, &newPost); err != nil {
@@ -50,7 +46,6 @@ func CreatePost(c *gin.Context) {
 		return
 	}
 
-	// Recarrega o post com os dados do usuário para que a resposta ao frontend seja completa.
 	database.DB.Preload("User").First(&newPost, newPost.ID)
 
 	c.JSON(http.StatusCreated, newPost)
