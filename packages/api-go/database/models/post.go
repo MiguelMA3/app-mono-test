@@ -41,3 +41,9 @@ func LikePost(db *gorm.DB, id string) (Post, error) {
 
 	return post, nil
 }
+
+func GetPostsByUserID(db *gorm.DB, userID string) ([]Post, error) {
+	var posts []Post
+	result := db.Preload("User").Where("user_id = ?", userID).Order("created_at desc").Find(&posts)
+	return posts, result.Error
+}

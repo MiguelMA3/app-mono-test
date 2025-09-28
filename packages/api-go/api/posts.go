@@ -85,3 +85,25 @@ func LikePost(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, post)
 }
+
+// GetPostsByUserID godoc
+// @Summary      Lista os posts de um usuário específico
+// @Description  Retorna um array com todos os posts de um usuário.
+// @Tags         Posts
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "ID do Usuário"
+// @Success      200  {array}   models.Post
+// @Failure      500  {object}  object{error=string}
+// @Router       /users/{id}/posts [get]
+// @Security     BearerAuth
+func GetPostsByUserID(c *gin.Context) {
+	userID := c.Param("id")
+
+	posts, err := models.GetPostsByUserID(database.DB, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Falha ao buscar posts do usuário"})
+		return
+	}
+	c.JSON(http.StatusOK, posts)
+}

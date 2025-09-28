@@ -66,6 +66,7 @@ func main() {
 			authorized.GET("/posts", api.GetPosts)
 			authorized.POST("/posts", api.CreatePost)
 			authorized.POST("/posts/:id/like", api.LikePost)
+			authorized.GET("/users/:id/posts", api.GetPostsByUserID)
 		}
 	}
 
