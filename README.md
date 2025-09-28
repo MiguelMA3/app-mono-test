@@ -30,7 +30,7 @@ Esta é a implementação do desafio técnico para a posição de desenvolvedor,
   - **React:** Biblioteca para a construção da interface de usuário.
   - **React Router DOM:** Para gerenciamento de rotas e navegação na aplicação (Single Page Application).
   - **Axios:** Para realizar as requisições HTTP entre o frontend e a API.
-  - **CSS:** em desenvolvimento
+  - **CSS:** CSS Modules para estilização encapsulada por componente, com variáveis CSS globais para manter um tema consistente.
 
 - **Estrutura:**
   - **Monorepo:** O projeto foi mantido em um monorepo para gerenciar o código do frontend e do backend.
@@ -98,18 +98,6 @@ cd packages/api-go
 go test ./...
 ```
 
-### Testes do Frontend (React)
-
-O frontend foi criado com `Create React App` e inclui uma estrutura de testes. Para executá-los:
-
-```bash
-# Navegue até o diretório do frontend
-cd packages/frontend-react
-
-# Execute os testes em modo interativo
-npm test
-```
-
 ## Decisões Técnicas
 
 - **Backend em Go:** A escolha pelo Go e o framework Gin foi motivada pela alta performance e baixo consumo de recursos, características importantes para APIs escaláveis. O uso do GORM com `Preload` otimizou as consultas ao banco, evitando o problema de N+1 queries ao buscar posts e seus autores.
@@ -118,4 +106,4 @@ npm test
 
 - **Seeding do Banco de Dados:** Foi criada uma rotina de "seeding" para popular o banco de dados na primeira inicialização. Isso garante que a aplicação sempre tenha dados de exemplo para facilitar testes e demonstrações, melhorando a experiência do desenvolvedor e do avaliador.
 
-- **Frontend em React:** O React foi escolhido por ser uma base sólida e popular para o desenvolvimento de SPAs (Single Page Applications). A estrutura de componentes foi separada em `pages` e `services` para uma melhor organização. O estado de autenticação é gerenciado no componente `App.js` para garantir que a interface reaja corretamente ao login e logout
+- **Frontend em React:** O React foi escolhido por ser uma base simples e popular. A estrutura de componentes foi separada em `pages`, `components` e `services` para uma melhor organização. O estado de autenticação é gerenciado no componente `App.js` para garantir que a interface reaja corretamente ao login e logout.
