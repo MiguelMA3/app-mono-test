@@ -2,6 +2,20 @@
 
 Esta é a implementação do desafio técnico para a posição de desenvolvedor, correspondente ao nível Júnior. A aplicação consiste em uma API RESTful em Go e um frontend em React, que juntos formam uma pequena rede social com perfis de usuário, posts e curtidas.
 
+## Sumário
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Como Configurar e Rodar a Aplicação](#como-configurar-e-rodar-a-aplicação)
+  - [Pré-requisitos](#pré-requisitos)
+  - [Backend (API em Go)](#1-backend-api-em-go)
+  - [Frontend (Aplicação em React)](#2-frontend-aplicação-em-react)
+- [Acessando a Documentação (Swagger)](#acessando-a-documentação-swagger)
+- [Executando os Testes](#executando-os-testes)
+  - [Testes do Backend](#testes-do-backend-api-em-go)
+  - [Testes do Frontend](#testes-do-frontend-react)
+- [Decisões Técnicas](#decisões-técnicas)
+
+---
+
 ## Tecnologias Utilizadas
 
 - **Backend:**
@@ -87,4 +101,4 @@ npm test
 
 - **Seeding do Banco de Dados:** Foi criada uma rotina de "seeding" para popular o banco de dados na primeira inicialização. Isso garante que a aplicação sempre tenha dados de exemplo para facilitar testes e demonstrações, melhorando a experiência do desenvolvedor e do avaliador.
 
-- **Frontend em React:** O React foi escolhido por ser uma base sólida e popular para o desenvolvimento de SPAs (Single Page Applications). A estrutura de componentes foi separada em `pages` e `services` para uma melhor organização. O estado de autenticação é gerenciado no componente `App.js` para garantir que a interface reaja corretamente ao login e logout [cite: miguel
+- **Frontend em React:** O React foi escolhido por ser uma base sólida e popular para o desenvolvimento de SPAs (Single Page Applications). A estrutura de componentes foi separada em `pages` e `services` para uma melhor organização. O estado de autenticação é gerenciado no componente `App.js` para garantir que a interface reaja corretamente ao login e logout
