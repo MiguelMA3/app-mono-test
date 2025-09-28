@@ -53,3 +53,4 @@ microservices-go/bin/
 microservices-go/pkg/
 api-go/bin/
 api-go/pkg/
+packages/api-go/database.sqlite

@@ -1,0 +1,59 @@
+.postContainer {
+  display: flex;
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* O avatar foi removido conforme sua solicitação */
+
+.postContent {
+  width: 100%;
+}
+
+.postHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.authorName {
+  font-weight: bold;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.authorName:hover {
+  text-decoration: underline;
+}
+
+.postTimestamp {
+  margin-left: 5px;
+  color: var(--text-secondary-color);
+  font-size: 0.9em;
+}
+
+.postBody p {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--text-color);
+  white-space: pre-wrap; /* Mantém as quebras de linha do post */
+}
+
+.postActions {
+  margin-top: 15px;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  color: var(--text-secondary-color);
+  cursor: pointer;
+  font-size: 1em;
+  padding: 0;
+}
+
+.actionButton:hover {
+  color: #e0245e; /* Cor vermelha para o hover do like */
+}
