@@ -17,7 +17,7 @@ function ProfilePage() {
             }
 
             try {
-                const response = await api.get(`/users/{$userId}`);
+                const response = await api.get(`/users/${userId}`);
                 setUser(response.data);
             } catch (err) {
                 setError('Não foi possível carregar os dados do perfil.');
