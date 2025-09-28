@@ -75,10 +75,11 @@ function TimelinePage() {
         {posts.length > 0 ? (
           posts.map(post => (
             <div key={post.id} style={{ border: '1px solid #ccc', margin: '10px', padding: '10px' }}>
+              <p><strong>{post.user ? post.user.username : 'Usuário desconhecido'}</strong></p>
+
               <p>{post.content}</p>
               <small>Postado em: {new Date(post.createdAt).toLocaleString()}</small>
               <div>
-                {/* Botão de curtir agora chama a função */}
                 <button onClick={() => handleLikePost(post.id)}>
                   Curtir ({post.likes})
                 </button>

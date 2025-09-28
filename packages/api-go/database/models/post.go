@@ -14,11 +14,13 @@ type Post struct {
 	UserID    uint       `json:"userId"`
 	Content   string     `gorm:"not null" json:"content"`
 	Likes     int        `gorm:"default:0" json:"likes"`
+
+	User User `gorm:"foreignKey:UserID" json:"user"`
 }
 
 func GetAllPosts(db *gorm.DB) ([]Post, error) {
 	var posts []Post
-	result := db.Order("created_at desc").Find(&posts)
+	result := db.Preload("User").Order("created_at desc").Find(&posts)
 	return posts, result.Error
 }
 
