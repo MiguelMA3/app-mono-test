@@ -26,20 +26,22 @@ function App() {
 
   return (
     <BrowserRouter>
-      {isLoggedIn && <Nav onLogout={handleLogout} />}
-      <Routes>
-        <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+      <div className="container">
+        {isLoggedIn && <Nav onLogout={handleLogout} />}
+        <Routes>
+          <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
 
-        <Route
-          path="/"
-          element={<PrivateRoute><TimelinePage /></PrivateRoute>}
-        />
-        <Route
-          path="/profile/:userId"
-          element={<PrivateRoute><ProfilePage /></PrivateRoute>}
-        />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+          <Route
+            path="/"
+            element={<PrivateRoute><TimelinePage /></PrivateRoute>}
+          />
+          <Route
+            path="/profile/:userId"
+            element={<PrivateRoute><ProfilePage /></PrivateRoute>}
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }
@@ -55,11 +57,11 @@ const Nav = ({ onLogout }) => {
 
   return (
     <nav>
-      <Link to="/">Timeline</Link> 
+      <Link to="/">Timeline</Link>
       | <Link to={`/profile/${userId}`}>Meu Perfil</Link>
       | <button onClick={handleLogoutClick} style={{ marginLeft: '10px', background: 'none', border: 'none', color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}>
-          Sair
-        </button>
+        Sair
+      </button>
     </nav>
   );
 };

@@ -52,7 +52,7 @@ function TimelinePage() {
   }
 
   return (
-    <div>
+    <div className="page-content">
       <hr />
       <h1>Timeline</h1>
 

@@ -36,3 +36,43 @@
     transform: rotate(360deg);
   }
 }
+
+nav {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espaçamento entre os links */
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+nav button {
+  background: none !important;
+  color: var(--text-secondary-color) !important;
+  font-weight: normal;
+  padding: 0 !important;
+  margin-left: auto; /* Empurra o botão de logout para a direita */
+}
+
+nav button:hover {
+  text-decoration: underline;
+}
+
+/* Estilos para o conteúdo das páginas */
+.page-content {
+  padding: 20px;
+}
+
+/* Estilo para o formulário de login */
+.login-form {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+}

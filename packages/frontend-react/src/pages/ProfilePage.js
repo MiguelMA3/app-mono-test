@@ -54,7 +54,7 @@ function ProfilePage() {
   }
 
   return (
-    <div>
+    <div className="page-content">
       {user && (
         <>
           <h1>Perfil de {user.username}</h1>
