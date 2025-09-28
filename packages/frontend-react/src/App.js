@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
 
 import LoginPage from './pages/LoginPage';
 import TimelinePage from './pages/TimelinePage';
@@ -17,9 +17,16 @@ function App() {
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    setIsLoggedIn(false);
+  };
+
   return (
     <BrowserRouter>
-      {isLoggedIn && <Nav />}
+      {isLoggedIn && <Nav onLogout={handleLogout} />}
       <Routes>
         <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
 
@@ -37,12 +44,22 @@ function App() {
   );
 }
 
-const Nav = () => {
+const Nav = ({ onLogout }) => {
   const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
+
+  const handleLogoutClick = () => {
+    onLogout();
+    navigate('/login');
+  };
+
   return (
     <nav>
       <Link to="/">Timeline</Link> 
-      | <Link to={`/profile/${userId}`}>Meu Perfil</Link> 
+      | <Link to={`/profile/${userId}`}>Meu Perfil</Link>
+      | <button onClick={handleLogoutClick} style={{ marginLeft: '10px', background: 'none', border: 'none', color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}>
+          Sair
+        </button>
     </nav>
   );
 };
