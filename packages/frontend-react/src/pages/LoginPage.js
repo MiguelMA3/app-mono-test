@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api';
 
-function LoginPage() {
+function LoginPage({ onLoginSuccess }) {
     const [username, setUsername] = useState('admin');
     const [password, setPassword] =useState('1234');
     const [error, setError] = useState('');
@@ -19,11 +19,12 @@ function LoginPage() {
 
         try {
             const response = await api.post('/login', { username, password });
-
             const { token, userId } = response.data;
 
             localStorage.setItem('token', token);
             localStorage.setItem('userId', userId);
+
+            onLoginSuccess();
 
             setError('');
             navigate('/');

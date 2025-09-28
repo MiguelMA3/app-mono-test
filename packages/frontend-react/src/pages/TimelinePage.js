@@ -53,9 +53,6 @@ function TimelinePage() {
 
   return (
     <div>
-      <nav>
-        <Link to="/">Timeline</Link> | <Link to="/profile">Meu Perfil</Link>
-      </nav>
       <hr />
       <h1>Timeline</h1>
 
@@ -75,7 +72,13 @@ function TimelinePage() {
         {posts.length > 0 ? (
           posts.map(post => (
             <div key={post.id} style={{ border: '1px solid #ccc', margin: '10px', padding: '10px' }}>
-              <p><strong>{post.user ? post.user.username : 'Usuário desconhecido'}</strong></p>
+              <p><strong>
+                {post.user ? (
+                  <Link to={`/profile/${post.user.id}`}>
+                    {post.user.username}
+                  </Link>
+                ) : 'Usuário desconhecido'}
+              </strong></p>
 
               <p>{post.content}</p>
               <small>Postado em: {new Date(post.createdAt).toLocaleString()}</small>

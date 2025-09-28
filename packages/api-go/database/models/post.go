@@ -31,7 +31,7 @@ func CreatePost(db *gorm.DB, post *Post) error {
 
 func LikePost(db *gorm.DB, id string) (Post, error) {
 	var post Post
-	result := db.First(&post, id)
+	result := db.Preload("User").First(&post, id)
 	if result.Error != nil {
 		return post, result.Error
 	}

@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 
 import LoginPage from './pages/LoginPage';
 import TimelinePage from './pages/TimelinePage';
@@ -12,25 +12,39 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+  };
   return (
     <BrowserRouter>
+      {isLoggedIn && <Nav />}
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
 
         <Route
           path="/"
           element={<PrivateRoute><TimelinePage /></PrivateRoute>}
         />
-
         <Route
-          path="/profile"
+          path="/profile/:userId"
           element={<PrivateRoute><ProfilePage /></PrivateRoute>}
         />
-        
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
 }
+
+const Nav = () => {
+  const userId = localStorage.getItem('userId');
+  return (
+    <nav>
+      <Link to="/">Timeline</Link> 
+      | <Link to={`/profile/${userId}`}>Meu Perfil</Link> 
+    </nav>
+  );
+};
 
 export default App;
