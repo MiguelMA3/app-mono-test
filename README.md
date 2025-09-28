@@ -1,108 +1,90 @@
-# Challenge for developers - Technical Assessment
+# Desafio Técnico: Perfil de Usuário e Timeline (Nível Júnior)
 
-## Descrição Geral
+Esta é a implementação do desafio técnico para a posição de desenvolvedor, correspondente ao nível Júnior. A aplicação consiste em uma API RESTful em Go e um frontend em React, que juntos formam uma pequena rede social com perfis de usuário, posts e curtidas.
 
-Este repositório contém um desafio técnico para desenvolvedores de diferentes níveis (Júnior, Pleno e Sênior). O objetivo é construir uma aplicação de perfil de usuário com uma timeline (feed) onde os usuários possam criar postagens e interagir com reações, como curtidas. O desafio está estruturado em diferentes níveis de complexidade, permitindo avaliar habilidades em desenvolvimento frontend e backend.
+## Tecnologias Utilizadas
 
-## Estrutura do Repositório
+- **Backend:**
+  - **Go:** Linguagem escolhida pela sua performance e simplicidade.
+  - **Gin Gonic:** Framework web para a construção da API RESTful, conhecido pela sua velocidade.
+  - **GORM:** ORM para a interação com o banco de dados, facilitando as queries.
+  - **JWT (JSON Web Tokens):** Para a implementação de autenticação stateless.
+  - **SQLite:** Banco de dados leve e baseado em arquivo, ideal para desenvolvimento e prototipagem.
+  - **Swag:** Ferramenta para gerar a documentação da API no formato Swagger.
 
-O repositório está organizado como um monorepo, com múltiplos diretórios correspondentes a diferentes partes do sistema, incluindo tanto APIs quanto interfaces de usuário. Abaixo está uma explicação detalhada sobre cada diretório e sua finalidade:
+- **Frontend:**
+  - **React:** Biblioteca para a construção da interface de usuário.
+  - **React Router DOM:** Para gerenciamento de rotas e navegação na aplicação (Single Page Application).
+  - **Axios:** Para realizar as requisições HTTP entre o frontend e a API.
+  - **CSS:** em desenvolvimento
 
+- **Estrutura:**
+  - **Monorepo:** O projeto foi mantido em um monorepo para gerenciar o código do frontend e do backend.
+
+## Como Configurar e Rodar a Aplicação
+
+### Pré-requisitos
+- Go (versão 1.24 ou superior)
+- Node.js (versão 18 ou superior)
+- Git
+
+### 1. Backend (API em Go)
+
+Abra um terminal e execute os seguintes comandos:
+
+```bash
+# Navegue até o diretório da API
+cd packages/api-go
+
+# Instale as dependências (só precisa na primeira vez)
+go mod tidy
+
+# Execute a aplicação
+go run main.go
 ```
-user-profile-app/
-├── README.md
-├── packages/
-│   ├── monolith-sample/      # Monolito Quick Start em Node.js (Iniciado)
-│   ├── monolith-node/        # Monolito em Node.js (Iniciado)
-│   ├── api-node/             # API em Node.js (Iniciado)
-│   ├── api-go/               # API em Go (Iniciado)
-│   ├── microservices-go/     # Microserviços em Go (Diretórios Vazios)
-│   ├── frontend-react/       # Frontend em React (Pacote Inicial Criado)
-│   ├── frontend-nextjs/      # Frontend em Next.js (Pacote Inicial Criado)
-├── package.json
-└── .gitignore
+
+## Acessando a Documentação (Swagger)
+
+Com o backend (API em Go) em execução, você pode acessar a documentação completa da API, gerada pelo Swagger, no seu navegador através do seguinte link:
+
+[**http://localhost:8080/swagger/index.html**](http://localhost:8080/swagger/index.html)
+
+> Lembre-se de regenerar a documentação com o comando `swag init` dentro da pasta `packages/api-go` caso faça alterações nos comentários da API.
+
+## Executando os Testes
+
+O projeto possui testes unitários tanto para o backend quanto para o frontend, conforme solicitado nos requisitos.
+
+### Testes do Backend (API em Go)
+
+Os testes validam os principais endpoints da API. Para executá-los:
+
+```bash
+# Navegue até o diretório da API
+cd packages/api-go
+
+# Execute todos os testes
+go test ./...
 ```
 
-## Níveis de Experiência
+### Testes do Frontend (React)
 
-### Nível Júnior
+O frontend foi criado com `Create React App` e inclui uma estrutura de testes. Para executá-los:
 
-#### Requisitos Mínimos
-- **API RESTful:** Implementar um monolito em Node.js ou uma API RESTful em Node.js ou Go para gerenciamento de perfis de usuário.
-  - Operações CRUD (Create, Read, Update, Delete) para os perfis.
-  - Endpoint para criação de postagens na timeline.
-  - Endpoint para reagir a postagens com curtidas.
-- **Frontend Básico:** Utilizar React ou Next.js para criar uma tela de perfil e uma timeline de postagens.
-  - Exibir postagens na timeline com a capacidade de adicionar novas postagens e curtir.
-- **Autenticação:** Implementar autenticação utilizando JWT.
-- **Testes Unitários:** Criar testes unitários para os principais endpoints da API.
-- **Documentação:** Documentar a API utilizando Swagger ou uma ferramenta similar.
+```bash
+# Navegue até o diretório do frontend
+cd packages/frontend-react
 
-#### Implementação Inicial (monolith-sample)
-- O diretório `monolith-sample/` já contém uma implementação básica em Node.js e React.
-- **Dependências**: O projeto foi configurado para rodar com Node.js e SQLite.
-- **Instruções de Uso**: 
-  - Para rodar o projeto, utilize os scripts:
-    ```bash
-    cd packages/monolith-sample
-    npm run install:all
-    npm run dev
-    ```
+# Execute os testes em modo interativo
+npm test
+```
 
-### Nível Pleno
+## Decisões Técnicas
 
-#### Requisitos Adicionais
-- **Frontend Avançado:** Migrar o frontend para Next.js (caso tenha escolhido React no nível Júnior).
-  - Implementar uma interface de usuário mais rica e responsiva.
-- **Banco de Dados:** Integração com um banco de dados relacional (ex: PostgreSQL).
-  - Persistir dados de usuários, postagens e reações (curtidas).
-- **Cache:** Implementar cache utilizando Redis para melhorar a performance das operações de leitura.
-- **Testes de Integração:** Criar testes de integração para validar o fluxo completo da aplicação.
+- **Backend em Go:** A escolha pelo Go e o framework Gin foi motivada pela alta performance e baixo consumo de recursos, características importantes para APIs escaláveis. O uso do GORM com `Preload` otimizou as consultas ao banco, evitando o problema de N+1 queries ao buscar posts e seus autores.
 
-#### Implementação Inicial
-- O diretório `frontend-nextjs/` já contém um pacote inicial criado com `create-next-app`, pronto para ser expandido.
-- **Expectativas**:
-  - Otimizar a aplicação para usar um banco de dados relacional e implementar as funcionalidades adicionais conforme descrito nos requisitos.
+- **Autenticação JWT:** A autenticação stateless com JWT foi implementada para garantir que a API seja escalável e não precise armazenar o estado da sessão. A segurança foi reforçada ao extrair o `username` do token no backend para a criação de posts, prevenindo que um usuário poste em nome de outro.
 
-### Nível Sênior
+- **Seeding do Banco de Dados:** Foi criada uma rotina de "seeding" para popular o banco de dados na primeira inicialização. Isso garante que a aplicação sempre tenha dados de exemplo para facilitar testes e demonstrações, melhorando a experiência do desenvolvedor e do avaliador.
 
-#### Requisitos Adicionais
-- **Escalabilidade e Performance:** Otimizar a aplicação para suportar um grande volume de postagens e curtidas simultâneas.
-  - Implementar concorrência utilizando Golang para processos críticos de performance (caso escolha Go).
-- **WebSocket:** Implementar WebSocket para atualizações em tempo real na timeline.
-- **Funcionalidade Offline:** Permitir que a aplicação funcione offline utilizando Service Workers.
-- **Monitoramento e Logs:** Configurar monitoramento e logging para a aplicação utilizando ferramentas como ELK Stack (Elasticsearch, Logstash, Kibana).
-- **Microsserviços:** Refatorar parte da aplicação para uma arquitetura de microsserviços, separando responsabilidades (ex: serviço de autenticação, serviço de perfis, serviço de postagens).
-
-#### Implementação Inicial
-- Os diretórios `microservices-go/` (`auth-service`, `post-service`, `profile-service`) foram criados, mas estão vazios. Esses diretórios servem como base para implementação de uma arquitetura de microsserviços, onde cada serviço é responsável por uma parte específica da aplicação.
-- **Expectativas**:
-  - Implementar toda a estrutura de microsserviços, utilizando Golang, com foco em escalabilidade e performance.
-
-## Instruções de Entrega
-
-1. **Repositório Git:** Submeta o código em um repositório Git. Pode ser público ou privado (forneça acesso se for privado).
-2. **Branches:** Crie uma branch específica para cada nível (junior, pleno, senior). Certifique-se de que o código esteja devidamente commitado em cada branch correspondente.
-3. **README Individual:** Cada branch deve conter um README.md próprio explicando as decisões técnicas tomadas, como configurar e rodar a aplicação para aquele nível.
-4. **Demonstração:** Opcional, mas recomendado. Inclua uma demonstração ao vivo ou um vídeo explicando a aplicação e as funcionalidades implementadas.
-
-## Avaliação
-
-Os candidatos serão avaliados com base nos seguintes critérios:
-
-- **Código Limpo e Manutenível:** Organização do código, padrões de projeto, legibilidade e comentários.
-- **Funcionalidade:** Atendimento aos requisitos mínimos e adicionais conforme o nível.
-- **Qualidade dos Testes:** Cobertura e eficácia dos testes unitários e de integração.
-- **Desempenho:** Capacidade de lidar com carga elevada, eficiência do uso de cache e concorrência.
-- **Documentação:** Qualidade e clareza da documentação da API e do código.
-- **Inovação e Melhoria:** Implementação de funcionalidades adicionais que demonstrem criatividade e conhecimento avançado.
-
-## Como Iniciar
-
-1. Clone este repositório:
-
-2. Navegue até o diretório correspondente ao seu nível e tecnologia escolhida.
-   
-3. Siga as instruções do README específico da branch para rodar a aplicação e começar a desenvolver.
-
-Boa sorte!
+- **Frontend em React:** O React foi escolhido por ser uma base sólida e popular para o desenvolvimento de SPAs (Single Page Applications). A estrutura de componentes foi separada em `pages` e `services` para uma melhor organização. O estado de autenticação é gerenciado no componente `App.js` para garantir que a interface reaja corretamente ao login e logout [cite: miguel
