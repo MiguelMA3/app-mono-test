@@ -160,7 +160,13 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	if req.Username != "admin" || req.Password != "1234" {
+	var user models.User
+	if err := database.DB.Where("username = ?", req.Username).First(&user).Error; err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "usuario ou senha incorretos"})
+		return
+	}
+
+	if req.Password != "1234" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "usuario ou senha incorretos"})
 		return
 	}
@@ -171,5 +177,9 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{
+		"token":    token,
+		"userId":   user.ID,
+		"username": user.Username,
+	})
 }

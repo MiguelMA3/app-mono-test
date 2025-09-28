@@ -27,4 +27,20 @@ func ConnectDatabase() {
 	}
 
 	log.Println("Migracao do Database OK!")
+
+	var userCount int64
+	DB.Model(&models.User{}).Count(&userCount)
+
+	if userCount == 0 {
+		log.Println("Novo banco de dados detectado, criando usuario padrao...")
+		adminUser := models.User{
+			Username: "admin",
+			Email:    "admin@example.com",
+			Bio:      "Hello there",
+		}
+		if err := DB.Create(&adminUser).Error; err != nil {
+			log.Fatalf("Falha ao criar usuario admin padrao: %v", err)
+		}
+		log.Println("Usuario 'admin' criado com sucesso.")
+	}
 }
