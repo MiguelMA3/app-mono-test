@@ -57,6 +57,23 @@ go mod tidy
 go run main.go
 ```
 
+> A API estará rodando em http://localhost:8080. O banco de dados (database.sqlite) será criado e populado com usuários e posts de exemplo na primeira execução.
+
+### 2.Frontend (Aplicação em React)
+
+Abra um novo terminal e execute os seguintes comandos:
+```bash
+# Navegue até o diretório do frontend
+cd packages/frontend-react
+
+# Instale as dependências (só precisa na primeira vez)
+npm install
+
+# Execute a aplicação
+npm start
+```
+> A aplicação React estará rodando em http://localhost:3000 e se conectará automaticamente à API.
+
 ## Acessando a Documentação (Swagger)
 
 Com o backend (API em Go) em execução, você pode acessar a documentação completa da API, gerada pelo Swagger, no seu navegador através do seguinte link:
