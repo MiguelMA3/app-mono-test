@@ -41,6 +41,7 @@ Esta é a implementação do desafio técnico para a posição de desenvolvedor,
 - Go (versão 1.24 ou superior)
 - Node.js (versão 18 ou superior)
 - Git
+- (Para usuários de Windows) Um compilador C: A biblioteca `go-sqlite3` utilizada neste projeto requer um compilador C para ser executada. Caso encontre um erro relacionado a `CGO_ENABLED=0`, é necessário instalar um ambiente como o [MinGW-w64 (via MSYS2)](https://www.msys2.org/) e adicioná-lo ao PATH do sistema. Em ambientes Linux e macOS, as ferramentas de compilação necessárias geralmente já estão presentes.
 
 ### 1. Backend (API em Go)
 
