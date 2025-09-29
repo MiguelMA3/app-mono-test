@@ -14,6 +14,9 @@ const PrivateRoute = ({ children }) => {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
 
+  // Esta função é passada como prop para `LoginPage` para que ela possa
+  // atualizar o estado de `isLoggedIn` no componente pai (`App.js`)
+  // após o login bem-sucedido.
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
   };
@@ -27,10 +30,13 @@ function App() {
   return (
     <BrowserRouter>
       <div className="container">
+        {/* A barra de navegação só é exibida se o usuário estiver logado. */}
         {isLoggedIn && <Nav onLogout={handleLogout} />}
         <Routes>
           <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
 
+          {/* As rotas de Timeline e Perfil são envolvidas pelo `PrivateRoute`
+              para garantir que apenas usuários autenticados possam acessá-las. */}
           <Route
             path="/"
             element={<PrivateRoute><TimelinePage /></PrivateRoute>}

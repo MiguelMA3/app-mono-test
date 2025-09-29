@@ -27,6 +27,9 @@ func CreatePost(c *gin.Context) {
 		return
 	}
 
+	// O username é obtido do contexto, que foi adicionado pelo `AuthMiddleware`.
+	// Isso garante que o post seja associado ao usuário autenticado,
+	// e não a um `userId` enviado no corpo da requisição, que poderia ser forjado.
 	username, exists := c.Get("username")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
@@ -46,6 +49,8 @@ func CreatePost(c *gin.Context) {
 		return
 	}
 
+	// O `Preload("User")` é usado para carregar os dados do usuário associado ao post.
+	// Isso evita que o frontend precise fazer uma nova requisição para obter o nome do autor do post.
 	database.DB.Preload("User").First(&newPost, newPost.ID)
 
 	c.JSON(http.StatusCreated, newPost)

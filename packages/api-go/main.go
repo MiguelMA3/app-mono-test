@@ -37,6 +37,9 @@ func main() {
 
 	router := gin.Default()
 
+	// Configuração do CORS para permitir que o frontend (rodando em localhost:3000)
+	// se comunique com a API. Sem isso, o navegador bloquearia as requisições
+	// por questões de segurança (Same-Origin Policy).
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -44,8 +47,11 @@ func main() {
 		AllowCredentials: true,
 	}))
 
+	// Rota para a documentação da API gerada pelo Swagger.
+	// O `ginSwagger.WrapHandler` serve a interface do Swagger UI.
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	// Rota de health-check para verificar se a API está no ar.
 	router.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Hello There!")
 	})
@@ -54,6 +60,9 @@ func main() {
 	{
 		apiV1.POST("/login", api.Login)
 
+		// Grupo de rotas que exigem autenticação.
+		// O `api.AuthMiddleware()` é aplicado a todas as rotas dentro deste grupo,
+		// garantindo que apenas usuários autenticados possam acessá-las.
 		authorized := apiV1.Group("/")
 		authorized.Use(api.AuthMiddleware())
 		{
