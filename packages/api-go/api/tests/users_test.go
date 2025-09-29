@@ -47,11 +47,18 @@ func setupTestDBAndRouter(t *testing.T) *gin.Engine {
 
 func TestCreateUser(t *testing.T) {
 	router := setupTestDBAndRouter(t)
-	router.POST("/api/v1/users", api.CreateUser)
+	_, token := createUserAndToken(t, database.DB, "admin_user")
+
+	authorized := router.Group("/api/v1")
+	authorized.Use(api.AuthMiddleware())
+	{
+		authorized.POST("/users", api.CreateUser)
+	}
 
 	newUser := `{"username": "testuser", "email": "test@example.com", "bio": "A test user"}`
 	req, _ := http.NewRequest("POST", "/api/v1/users", bytes.NewBufferString(newUser))
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
 
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
