@@ -8,6 +8,8 @@ import (
 	"github.com/leandro-andrade-candido/api-go/auth"
 )
 
+// AuthMiddleware Verifica a validade de um token JWT
+// e garante a segurança dos endpoints que o utilizam.
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -25,7 +27,11 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		// Adiciona o nome de usuário (extraído do token) ao contexto da requisição.
+		// Isso permite que os handlers subsequentes acessem o usuário autenticado
+		// de forma segura, sem precisar analisar o token novamente.
 		c.Set("username", claims.Username)
+
 		c.Next()
 	}
 }

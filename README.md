@@ -72,7 +72,10 @@ npm install
 # Execute a aplicação
 npm start
 ```
+
 > A aplicação React estará rodando em http://localhost:3000 e se conectará automaticamente à API.
+
+> A senha padrão de todos os usuários é '1234'
 
 ## Acessando a Documentação (Swagger)
 
