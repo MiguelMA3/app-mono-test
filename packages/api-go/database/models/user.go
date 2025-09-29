@@ -39,7 +39,15 @@ func UpdateUser(db *gorm.DB, user *User) error {
 }
 
 func DeleteUser(db *gorm.DB, id string) error {
-	var user User
-	result := db.Delete(&user, id)
-	return result.Error
+	result := db.Model(&User{}).Where("id = ?", id).Update("deleted_at", time.Now())
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
 }
